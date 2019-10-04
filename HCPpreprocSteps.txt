@@ -1,0 +1,32 @@
+fMRI Preprocessing steps
+Arun
+
+
+Src : https://www.humanconnectome.org/storage/app/media/documentation/s1200/HCP_S1200_Release_Reference_Manual.pdf#%5B%7B%22num%22%3A442%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70%2C680%2C0%5D
+
+
+Pre Freesurfer pipeline
+
+1. Gradient distortion correction.
+2. Coregistration and averaging of T1w and T2w runs
+3. ACPC (i.e. 6 dof) registration for T1w and T2w (FLIRT plus a customized script). The acpc registered distortion corrected T1w image is in the “native” volume space.
+4. Initial brain extraction for T1w and T2w (FNIRT -atlas -based-brain-mask)
+5. Field map distortion correction and registration of T2w to T1w using
+a customized FLIRT BBR algorithm.
+6. Bias field correction using sqrt(T1w X T2w)
+7. Atlas registration (FLIRT linear + FNIRT nonlinear to MNI152)
+
+MR functional Pipelines
+
+1. Gradient distortion correction.
+2. FLIRT -based motion correction using the “SBRef” volume as the target (
+Smith SM et al ., submitted).
+3. TOPUP -based field map preprocessing using Spin echo field map (for
+Each day of each BOLD run)
+4. Distortion correction and EPI to T1w registration of the “SBRef” volume using a customized FLIRT BBR algorithm for distortion correction and bbregister to fine tune the Reference Manual – 1200 Subjects Release (updated April 2018) | WU- Minn Consortium Human Connectome Project registration.
+A Jacobian file representing the intensity modulations of the distortion
+correction is stored but not applied to the data.
+5. One step spline resampling from the original EPI frames to atlas space including all transforms (motion, EPI distortion, EPI to T1w
+from FLIRT BBR, fine tuning of EPI to T1w with bbregister, nonlinear T1w to MNI)
+6. Intensity normalization to mean of 10000 (like in FEAT) and bias field removal. 
+
